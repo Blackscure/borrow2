@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 
 users = {}
+books = {}
   
 @app.route('/')
 def home():
@@ -21,7 +22,7 @@ def login():
 
         for user in users:
             if users[user]['name'] == name and users[user]['password'] == password:
-                return redirect(url_for('borrow'))
+                return redirect(url_for('books'))
         
         error = 'invalid credentials.Please try again.'
         
@@ -35,20 +36,34 @@ def register():
         name = request.form['name']
         password = request.form['password']
         email = request.form['email']
+        passwordagain = request.form['passwordagain']
 
         id = len(users) + 1
 
-        users[id] = { 'name': name, 'password': password, 'email': email}
+        users[id] = { 'name': name, 'password': password, 'email': email, 'passwordagain': passwordagain}
+        return redirect(url_for('login'))
+
+        error = 'invalid credentials.Please try again.'
 
     return render_template('register.html', error=error)
  
- 
-                        
+
+@app.route('/books', methods=['GET'])
+def books():
+        
+    return render_template('books.html')
+
+@app.route('/addbook', methods=['POST'])
+def addbook():
+    error = None
+    author = request.form['author']
+    description = request.form['description']
+    title = request.form['title']
+
+    
+
 
  
-@app.route('/borrow')
-def borrow():
-    return render_template("borrow.html")
  
 if __name__ == '__main__':
     app.run(debug = True)
